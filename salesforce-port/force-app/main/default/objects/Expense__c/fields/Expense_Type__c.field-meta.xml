@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Expense_Type__c</fullName>
+    <label>Expense Type</label>
+    <type>Picklist</type>
+    <required>true</required>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Cash</fullName><default>true</default><label>Cash/Manual</label></value>
+            <value><fullName>Distance</fullName><default>false</default><label>Distance/Mileage</label></value>
+            <value><fullName>Per_Diem</fullName><default>false</default><label>Per Diem</label></value>
+            <value><fullName>Card</fullName><default>false</default><label>Card Transaction</label></value>
+            <value><fullName>Time</fullName><default>false</default><label>Time</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

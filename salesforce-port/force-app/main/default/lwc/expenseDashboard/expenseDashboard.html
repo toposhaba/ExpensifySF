@@ -1,0 +1,56 @@
+<template>
+    <div class="slds-p-around_medium">
+        <h1 class="slds-text-heading_large slds-m-bottom_medium">Dashboard</h1>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <!-- Summary Cards -->
+        <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_large">
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-card>
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-title slds-m-bottom_xx-small">Monthly Spend</p>
+                        <p class="slds-text-heading_large">{formattedMonthlySpend}</p>
+                    </div>
+                </lightning-card>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-card>
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-title slds-m-bottom_xx-small">Pending Approvals</p>
+                        <p class="slds-text-heading_large">{pendingApprovals}</p>
+                    </div>
+                </lightning-card>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-card>
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-title slds-m-bottom_xx-small">Unreported Expenses</p>
+                        <p class="slds-text-heading_large">{unreportedExpenses}</p>
+                    </div>
+                </lightning-card>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <lightning-card>
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-title slds-m-bottom_xx-small">Open Reports</p>
+                        <p class="slds-text-heading_large">{openReports}</p>
+                    </div>
+                </lightning-card>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <lightning-card title="Quick Actions" icon-name="utility:quick_actions">
+            <div class="slds-p-around_medium">
+                <lightning-button-group>
+                    <lightning-button label="New Expense" variant="brand" icon-name="utility:add"></lightning-button>
+                    <lightning-button label="New Report" variant="neutral" icon-name="utility:new"></lightning-button>
+                    <lightning-button label="Submit Report" variant="neutral" icon-name="utility:forward"></lightning-button>
+                </lightning-button-group>
+            </div>
+        </lightning-card>
+    </div>
+</template>

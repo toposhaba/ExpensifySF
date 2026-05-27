@@ -1,0 +1,91 @@
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+
+    <lightning-card title={report.Name} icon-name="utility:file">
+        <div slot="actions">
+            <template lwc:if={canSubmit}>
+                <lightning-button label="Submit" variant="brand" onclick={handleSubmit}
+                                 icon-name="utility:forward"></lightning-button>
+            </template>
+            <template lwc:if={canApprove}>
+                <lightning-button label="Approve" variant="success" onclick={handleApprove}
+                                 icon-name="utility:check" class="slds-m-left_x-small"></lightning-button>
+                <lightning-button label="Reject" variant="destructive" onclick={handleRejectClick}
+                                 icon-name="utility:close" class="slds-m-left_x-small"></lightning-button>
+            </template>
+        </div>
+
+        <!-- Report Summary -->
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-4">
+                    <dl>
+                        <dt class="slds-text-title">Status</dt>
+                        <dd><span class={statusBadgeClass}>{report.Status__c}</span></dd>
+                    </dl>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <dl>
+                        <dt class="slds-text-title">Total Amount</dt>
+                        <dd class="slds-text-heading_small">
+                            <lightning-formatted-number value={report.Total_Amount__c}
+                                                       format-style="currency"
+                                                       currency-code={report.Currency__c}>
+                            </lightning-formatted-number>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <dl>
+                        <dt class="slds-text-title">Reimbursable</dt>
+                        <dd class="slds-text-heading_small">
+                            <lightning-formatted-number value={report.Reimbursable_Total__c}
+                                                       format-style="currency"
+                                                       currency-code={report.Currency__c}>
+                            </lightning-formatted-number>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <dl>
+                        <dt class="slds-text-title">Expenses</dt>
+                        <dd class="slds-text-heading_small">{report.Expense_Count__c}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expenses Table -->
+        <div class="slds-p-around_medium">
+            <h3 class="slds-text-heading_small slds-m-bottom_small">Expenses</h3>
+            <lightning-datatable
+                key-field="Id"
+                data={expenses}
+                columns={expenseColumns}
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+
+    <!-- Reject Modal -->
+    <template lwc:if={showRejectModal}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Reject Report</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-textarea label="Rejection Reason" value={rejectReason}
+                                       onchange={handleRejectReasonChange} required></lightning-textarea>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleRejectModalClose}></lightning-button>
+                    <lightning-button label="Reject" variant="destructive" onclick={handleReject}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
