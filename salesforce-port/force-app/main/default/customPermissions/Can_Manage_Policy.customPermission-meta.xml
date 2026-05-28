@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Can Manage Policy</label>
+    <description>Allows user to configure expense policies including categories, tags, and rules</description>
+    <isLicensed>false</isLicensed>
+</CustomPermission>

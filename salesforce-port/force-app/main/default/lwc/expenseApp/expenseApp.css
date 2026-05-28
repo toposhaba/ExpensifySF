@@ -1,0 +1,24 @@
+.expense-app {
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+.nav-sidebar {
+    background-color: #ffffff;
+    border-right: 1px solid #e5e5e5;
+    min-height: 100vh;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #3e3e3c;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: #f3f2f2;
+}

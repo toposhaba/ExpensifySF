@@ -1,0 +1,39 @@
+<template>
+    <lightning-card title="My Expenses" icon-name="utility:money">
+        <div slot="actions">
+            <lightning-button label="New Expense" variant="brand" onclick={handleNewExpense}
+                             icon-name="utility:add"></lightning-button>
+        </div>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <template lwc:if={hasSelectedRows}>
+            <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-theme_shade">
+                <span class="slds-m-right_small">{selectedCount} selected</span>
+                <lightning-button-group>
+                    <lightning-button label="Assign to Report" variant="neutral"></lightning-button>
+                    <lightning-button label="Bulk Categorize" variant="neutral"></lightning-button>
+                </lightning-button-group>
+            </div>
+        </template>
+
+        <lightning-datatable
+            key-field="Id"
+            data={expenses}
+            columns={columns}
+            onrowaction={handleRowAction}
+            onrowselection={handleRowSelection}
+            show-row-number-column
+            hide-checkbox-column="false">
+        </lightning-datatable>
+
+        <template lwc:if={showForm}>
+            <c-expense-form
+                expense-id={selectedExpenseId}
+                onclose={handleFormClose}>
+            </c-expense-form>
+        </template>
+    </lightning-card>
+</template>

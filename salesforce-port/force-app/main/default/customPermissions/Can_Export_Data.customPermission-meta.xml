@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Can Export Data</label>
+    <description>Allows user to export expense data to CSV or accounting systems</description>
+    <isLicensed>false</isLicensed>
+</CustomPermission>

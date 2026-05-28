@@ -1,0 +1,57 @@
+<template>
+    <lightning-card title="Expense Reports" icon-name="utility:file">
+        <div slot="actions">
+            <lightning-button label="New Report" variant="brand" onclick={handleNewReport}
+                             icon-name="utility:add"></lightning-button>
+        </div>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <lightning-tabset active-tab-value={activeTab} onactive={handleTabChange}>
+            <lightning-tab label="My Reports" value="my-reports">
+                <lightning-datatable
+                    key-field="Id"
+                    data={reports}
+                    columns={columns}
+                    onrowaction={handleRowAction}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </lightning-tab>
+
+            <lightning-tab label="Pending Approval ({approvalCount})" value="approvals">
+                <lightning-datatable
+                    key-field="Id"
+                    data={approvalReports}
+                    columns={approvalColumns}
+                    onrowaction={handleRowAction}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </lightning-tab>
+        </lightning-tabset>
+    </lightning-card>
+
+    <!-- New Report Modal -->
+    <template lwc:if={showNewReportModal}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close" onclick={handleModalClose}>
+                        <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">New Expense Report</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input type="text" label="Report Description" value={newReportName}
+                                    onchange={handleReportNameChange}></lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleModalClose}></lightning-button>
+                    <lightning-button label="Create" variant="brand" onclick={handleCreateReport}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

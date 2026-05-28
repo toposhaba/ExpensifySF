@@ -1,0 +1,59 @@
+<template>
+    <lightning-card title="Search Expenses" icon-name="utility:search">
+        <div class="slds-p-around_medium">
+            <!-- Search Filters -->
+            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                    <lightning-input type="search" label="Search" placeholder="Merchant or description..."
+                                    value={searchTerm} onchange={handleSearchTermChange}
+                                    onkeypress={handleKeyPress}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-bottom_small">
+                    <lightning-combobox label="Status" value={selectedStatus}
+                                       options={statusOptions}
+                                       onchange={handleStatusChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-bottom_small">
+                    <lightning-combobox label="Policy" value={selectedPolicy}
+                                       options={policies}
+                                       onchange={handlePolicyChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-bottom_small">
+                    <lightning-input type="date" label="From" value={startDate}
+                                    onchange={handleStartDateChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-p-bottom_small">
+                    <lightning-input type="date" label="To" value={endDate}
+                                    onchange={handleEndDateChange}></lightning-input>
+                </div>
+            </div>
+
+            <lightning-button label="Search" variant="brand" onclick={handleSearch}
+                             icon-name="utility:search"></lightning-button>
+        </div>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Searching"></lightning-spinner>
+        </template>
+
+        <template lwc:if={hasResults}>
+            <div class="slds-p-horizontal_medium">
+                <p class="slds-text-body_small slds-m-bottom_small">{resultCount} results found</p>
+                <lightning-datatable
+                    key-field="Id"
+                    data={results}
+                    columns={columns}
+                    sorted-by={sortedBy}
+                    sorted-direction={sortedDirection}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+        </template>
+
+        <template lwc:if={noResults}>
+            <div class="slds-p-around_medium slds-text-align_center">
+                <p class="slds-text-color_weak">No expenses found matching your criteria.</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

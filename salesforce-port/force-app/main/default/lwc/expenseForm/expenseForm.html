@@ -1,0 +1,125 @@
+<template>
+    <section class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        onclick={handleClose}>
+                    <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                </button>
+                <h2 class="slds-text-heading_medium">{formTitle}</h2>
+            </header>
+
+            <div class="slds-modal__content slds-p-around_medium">
+                <template lwc:if={isLoading}>
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </template>
+
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <!-- Expense Type -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-combobox label="Expense Type" value={expense.Expense_Type__c}
+                                           options={expenseTypeOptions} data-field="Expense_Type__c"
+                                           onchange={handleFieldChange} required></lightning-combobox>
+                    </div>
+
+                    <!-- Policy -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-combobox label="Policy/Workspace" value={selectedPolicyId}
+                                           options={policyOptions} data-field="Policy__c"
+                                           onchange={handleFieldChange}></lightning-combobox>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                        <lightning-input type="number" label="Amount" value={expense.Amount__c}
+                                        data-field="Amount__c" onchange={handleFieldChange}
+                                        required step="0.01" formatter="currency"></lightning-input>
+                    </div>
+
+                    <!-- Currency -->
+                    <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                        <lightning-combobox label="Currency" value={expense.Currency__c}
+                                           options={currencyOptions} data-field="Currency__c"
+                                           onchange={handleFieldChange} required></lightning-combobox>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                        <lightning-input type="date" label="Date" value={expense.Expense_Date__c}
+                                        data-field="Expense_Date__c" onchange={handleFieldChange}
+                                        required></lightning-input>
+                    </div>
+
+                    <!-- Merchant -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input type="text" label="Merchant" value={expense.Merchant__c}
+                                        data-field="Merchant__c" onchange={handleFieldChange}></lightning-input>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-combobox label="Category" value={expense.Category__c}
+                                           options={categoryOptions} data-field="Category__c"
+                                           onchange={handleFieldChange}></lightning-combobox>
+                    </div>
+
+                    <!-- Tag -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-combobox label="Tag" value={expense.Tag__c}
+                                           options={tagOptions} data-field="Tag__c"
+                                           onchange={handleFieldChange}></lightning-combobox>
+                    </div>
+
+                    <!-- Tax Amount -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input type="number" label="Tax Amount" value={expense.Tax_Amount__c}
+                                        data-field="Tax_Amount__c" onchange={handleFieldChange}
+                                        step="0.01"></lightning-input>
+                    </div>
+
+                    <!-- Distance fields -->
+                    <template lwc:if={isDistanceType}>
+                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                            <lightning-input type="number" label="Distance" value={expense.Distance__c}
+                                            data-field="Distance__c" onchange={handleFieldChange}
+                                            step="0.1"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                            <lightning-combobox label="Unit" value={expense.Distance_Unit__c}
+                                               options={distanceUnitOptions} data-field="Distance_Unit__c"
+                                               onchange={handleFieldChange}></lightning-combobox>
+                        </div>
+                    </template>
+
+                    <!-- Description -->
+                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                        <lightning-textarea label="Description" value={expense.Description__c}
+                                           data-field="Description__c"
+                                           onchange={handleFieldChange}></lightning-textarea>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input type="checkbox" label="Reimbursable"
+                                        checked={expense.Reimbursable__c}
+                                        data-field="Reimbursable__c"
+                                        onchange={handleFieldChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input type="checkbox" label="Billable"
+                                        checked={expense.Billable__c}
+                                        data-field="Billable__c"
+                                        onchange={handleFieldChange}></lightning-input>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="slds-modal__footer">
+                <lightning-button label="Cancel" onclick={handleClose}></lightning-button>
+                <lightning-button label="Save" variant="brand" onclick={handleSave}
+                                 class="slds-m-left_x-small"></lightning-button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

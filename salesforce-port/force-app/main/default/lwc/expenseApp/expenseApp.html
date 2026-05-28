@@ -1,0 +1,44 @@
+<template>
+    <div class="slds-grid slds-wrap expense-app">
+        <!-- Navigation Sidebar -->
+        <div class="slds-col slds-size_1-of-6 slds-p-around_small nav-sidebar">
+            <div class="slds-card slds-p-around_medium">
+                <h1 class="slds-text-heading_medium slds-m-bottom_medium">Expense Manager</h1>
+                <nav>
+                    <template for:each={navItems} for:item="item">
+                        <a key={item.value}
+                           class="nav-item slds-p-vertical_x-small slds-p-horizontal_small"
+                           data-view={item.value}
+                           onclick={handleNavigation}>
+                            <lightning-icon icon-name={item.icon} size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                            {item.label}
+                        </a>
+                    </template>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="slds-col slds-size_5-of-6 slds-p-around_small">
+            <template lwc:if={isDashboard}>
+                <c-expense-dashboard></c-expense-dashboard>
+            </template>
+
+            <template lwc:if={isExpenses}>
+                <c-expense-list></c-expense-list>
+            </template>
+
+            <template lwc:if={isReports}>
+                <c-expense-report-list onreportselected={handleReportSelected}></c-expense-report-list>
+            </template>
+
+            <template lwc:if={isWorkspaces}>
+                <c-workspace-settings></c-workspace-settings>
+            </template>
+
+            <template lwc:if={isSearch}>
+                <c-expense-search></c-expense-search>
+            </template>
+        </div>
+    </div>
+</template>

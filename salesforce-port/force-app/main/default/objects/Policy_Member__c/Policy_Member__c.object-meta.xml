@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>false</enableSearch>
+    <label>Policy Member</label>
+    <nameField>
+        <displayFormat>PM-{000000}</displayFormat>
+        <label>Membership Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Policy Members</pluralLabel>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>
