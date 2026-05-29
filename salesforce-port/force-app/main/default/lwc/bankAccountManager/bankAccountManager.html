@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Bank Accounts & Wallet" icon-name="standard:account">
+        <div slot="actions">
+            <lightning-button label="Add Account" variant="brand" icon-name="utility:add" onclick={handleOpenAddModal}></lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-3">
+                    <div class="slds-box slds-text-align_center slds-theme_shade">
+                        <p class="slds-text-body_small">Wallet Balance</p>
+                        <p class="slds-text-heading_large">{formattedWalletBalance}</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <div class="slds-box slds-text-align_center">
+                        <p class="slds-text-body_small">Active Accounts</p>
+                        <p class="slds-text-heading_large">{activeAccountCount}</p>
+                    </div>
+                </div>
+            </div>
+
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading accounts"></lightning-spinner>
+            </template>
+
+            <lightning-datatable
+                key-field="id"
+                data={accounts}
+                columns={columns}
+                onrowaction={handleRowAction}
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={isAddModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseAddModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Add Bank Account</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        label="Account Name"
+                        value={newAccount.accountName}
+                        onchange={handleAccountNameChange}
+                        placeholder="e.g., Primary Checking"
+                        required>
+                    </lightning-input>
+                    <lightning-combobox
+                        label="Bank"
+                        placeholder="Select a bank"
+                        options={bankOptions}
+                        value={newAccount.bank}
+                        onchange={handleBankChange}
+                        required>
+                    </lightning-combobox>
+                    <lightning-combobox
+                        label="Account Type"
+                        options={accountTypeOptions}
+                        value={newAccount.accountType}
+                        onchange={handleAccountTypeChange}
+                        required>
+                    </lightning-combobox>
+                    <lightning-input
+                        label="Routing Number"
+                        value={newAccount.routingNumber}
+                        onchange={handleRoutingNumberChange}
+                        pattern="[0-9]{9}"
+                        message-when-pattern-mismatch="Routing number must be 9 digits"
+                        max-length="9"
+                        required>
+                    </lightning-input>
+                    <lightning-input
+                        label="Account Number"
+                        value={newAccount.accountNumber}
+                        onchange={handleAccountNumberChange}
+                        type="password"
+                        required>
+                    </lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseAddModal} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Add Account" variant="brand" onclick={handleAddAccount}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

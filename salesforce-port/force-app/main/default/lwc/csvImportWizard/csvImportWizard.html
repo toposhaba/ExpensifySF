@@ -1,0 +1,98 @@
+<template>
+    <lightning-card title="CSV Import Wizard" icon-name="standard:data_streams">
+        <div class="slds-p-around_medium">
+            <div class="slds-m-bottom_medium">
+                <lightning-progress-bar value={progressValue} size="large"></lightning-progress-bar>
+                <p class="slds-text-body_small slds-text-align_center slds-m-top_x-small">{stepIndicator}</p>
+            </div>
+
+            <template lwc:if={isStep1}>
+                <div class="slds-box slds-p-around_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Step 1: Upload or Paste CSV Data</h3>
+                    <div class="slds-m-bottom_medium">
+                        <label class="slds-form-element__label">Upload CSV File</label>
+                        <input type="file" accept=".csv" onchange={handleFileChange} class="slds-m-top_xx-small">
+                        <template lwc:if={fileName}>
+                            <p class="slds-text-body_small slds-m-top_xx-small">Selected: {fileName}</p>
+                        </template>
+                    </div>
+                    <lightning-textarea
+                        label="Or Paste CSV Content"
+                        value={csvText}
+                        onchange={handleTextChange}
+                        placeholder="Name,Email,Amount&#10;John Doe,john@example.com,150.00&#10;Jane Smith,jane@example.com,275.50"
+                        min-height="200">
+                    </lightning-textarea>
+                </div>
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning-button
+                        label="Next: Preview"
+                        variant="brand"
+                        onclick={handleNext}
+                        disabled={!canProceedStep1}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <template lwc:if={isStep2}>
+                <div class="slds-box slds-p-around_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Step 2: Preview Data</h3>
+                    <p class="slds-text-body_regular slds-m-bottom_small">{recordCount} records parsed from CSV</p>
+                    <lightning-datatable
+                        key-field="id"
+                        data={parsedData}
+                        columns={columns}
+                        hide-checkbox-column
+                        max-row-selection="0">
+                    </lightning-datatable>
+                </div>
+                <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                    <lightning-button label="Back" onclick={handleBack}></lightning-button>
+                    <lightning-button
+                        label="Next: Confirm"
+                        variant="brand"
+                        onclick={handleNext}
+                        disabled={!canProceedStep2}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <template lwc:if={isStep3}>
+                <div class="slds-box slds-p-around_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Step 3: Confirm Import</h3>
+                    <div class="slds-illustration slds-illustration_small slds-text-align_center slds-p-around_medium">
+                        <lightning-icon icon-name="utility:upload" size="large" class="slds-m-bottom_small"></lightning-icon>
+                        <p class="slds-text-heading_medium">Ready to import {recordCount} records</p>
+                        <p class="slds-text-body_regular slds-text-color_weak slds-m-top_x-small">This action will create new records from the parsed CSV data.</p>
+                    </div>
+                </div>
+                <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                    <lightning-button label="Back" onclick={handleBack}></lightning-button>
+                    <lightning-button
+                        label="Confirm Import"
+                        variant="brand"
+                        onclick={handleConfirmImport}
+                        disabled={isImporting}>
+                    </lightning-button>
+                </div>
+                <template lwc:if={isImporting}>
+                    <div class="slds-m-top_medium slds-align_absolute-center">
+                        <lightning-spinner alternative-text="Importing" size="medium"></lightning-spinner>
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={isStepComplete}>
+                <div class="slds-box slds-p-around_large slds-text-align_center slds-theme_success">
+                    <lightning-icon icon-name="utility:success" size="large" variant="inverse" class="slds-m-bottom_small"></lightning-icon>
+                    <h3 class="slds-text-heading_medium">Import Successful</h3>
+                    <p class="slds-text-heading_large slds-m-top_small">{importedCount}</p>
+                    <p class="slds-text-body_regular">records imported successfully</p>
+                    <div class="slds-m-top_medium">
+                        <lightning-button label="Import More" variant="neutral" onclick={handleReset}></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

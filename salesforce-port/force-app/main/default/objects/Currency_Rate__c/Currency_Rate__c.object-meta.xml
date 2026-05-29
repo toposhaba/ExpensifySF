@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableReports>true</enableReports>
+    <enableSearch>false</enableSearch>
+    <label>Currency Rate</label>
+    <nameField><displayFormat>CR-{000000}</displayFormat><label>Rate Number</label><type>AutoNumber</type></nameField>
+    <pluralLabel>Currency Rates</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

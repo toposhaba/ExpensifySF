@@ -1,0 +1,111 @@
+<template>
+    <lightning-card title="Card Management" icon-name="standard:currency">
+        <div slot="actions">
+            <lightning-button label="Issue New Card" variant="brand" icon-name="utility:add" onclick={handleOpenIssueModal}></lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <div class="slds-box slds-text-align_center">
+                        <p class="slds-text-heading_large">{cardCount}</p>
+                        <p class="slds-text-body_small">Total Cards</p>
+                    </div>
+                </div>
+                <div class="slds-col">
+                    <div class="slds-box slds-text-align_center">
+                        <p class="slds-text-heading_large">{activeCardCount}</p>
+                        <p class="slds-text-body_small">Active</p>
+                    </div>
+                </div>
+                <div class="slds-col">
+                    <div class="slds-box slds-text-align_center">
+                        <p class="slds-text-heading_large">{frozenCardCount}</p>
+                        <p class="slds-text-body_small">Frozen</p>
+                    </div>
+                </div>
+            </div>
+
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading cards"></lightning-spinner>
+            </template>
+
+            <lightning-datatable
+                key-field="id"
+                data={cards}
+                columns={columns}
+                onrowaction={handleRowAction}
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={isIssueModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseIssueModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Issue New Card</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-combobox
+                        label="Cardholder"
+                        placeholder="Select a user"
+                        options={userOptions}
+                        value={newCard.cardholder}
+                        onchange={handleCardholderChange}
+                        required>
+                    </lightning-combobox>
+                    <lightning-input
+                        label="Spend Limit"
+                        type="number"
+                        value={newCard.spendLimit}
+                        onchange={handleSpendLimitChange}
+                        formatter="currency"
+                        step="100"
+                        min="100"
+                        required>
+                    </lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseIssueModal} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Issue Card" variant="brand" onclick={handleIssueCard}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template lwc:if={isLimitModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseLimitModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Update Spend Limit</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p class="slds-m-bottom_small">Card: {selectedCard.cardName} (****{selectedCard.lastFour})</p>
+                    <lightning-input
+                        label="New Spend Limit"
+                        type="number"
+                        value={newLimit}
+                        onchange={handleNewLimitChange}
+                        formatter="currency"
+                        step="100"
+                        min="100"
+                        required>
+                    </lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseLimitModal} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Update Limit" variant="brand" onclick={handleUpdateLimit}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

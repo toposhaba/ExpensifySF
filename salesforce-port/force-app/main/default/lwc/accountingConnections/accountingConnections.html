@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Accounting Integrations" icon-name="standard:connected_apps">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <template for:each={providers} for:item="provider">
+                    <div key={provider.id} class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+                        <lightning-card>
+                            <div class="slds-p-around_medium">
+                                <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_small">
+                                    <lightning-icon icon-name={provider.icon} size="medium" class="slds-m-right_small"></lightning-icon>
+                                    <div>
+                                        <h3 class="slds-text-heading_small">{provider.name}</h3>
+                                        <lightning-badge
+                                            label={provider.status}
+                                            class={provider.connected}>
+                                        </lightning-badge>
+                                    </div>
+                                </div>
+
+                                <template lwc:if={provider.lastSync}>
+                                    <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">
+                                        Last synced: {provider.lastSync}
+                                    </p>
+                                </template>
+
+                                <div class="slds-grid slds-gutters_x-small">
+                                    <template lwc:if={provider.connected}>
+                                        <lightning-button
+                                            label="Disconnect"
+                                            variant="destructive-text"
+                                            data-id={provider.id}
+                                            onclick={handleToggleConnection}
+                                            class="slds-m-right_x-small">
+                                        </lightning-button>
+                                        <lightning-button
+                                            label="Sync Report"
+                                            variant="brand-outline"
+                                            data-id={provider.id}
+                                            onclick={handleOpenSyncModal}>
+                                        </lightning-button>
+                                    </template>
+                                    <template lwc:else>
+                                        <lightning-button
+                                            label="Connect"
+                                            variant="brand"
+                                            data-id={provider.id}
+                                            onclick={handleToggleConnection}>
+                                        </lightning-button>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={isSyncModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseSyncModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Sync Report to {selectedProvider.name}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-combobox
+                        label="Select Report"
+                        placeholder="Choose a report to sync"
+                        options={reportOptions}
+                        value={selectedReportId}
+                        onchange={handleReportChange}
+                        required>
+                    </lightning-combobox>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseSyncModal} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button
+                        label="Sync"
+                        variant="brand"
+                        onclick={handleSyncReport}
+                        disabled={isSyncing}>
+                    </lightning-button>
+                    <template lwc:if={isSyncing}>
+                        <lightning-spinner alternative-text="Syncing" size="small" class="slds-m-left_small"></lightning-spinner>
+                    </template>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

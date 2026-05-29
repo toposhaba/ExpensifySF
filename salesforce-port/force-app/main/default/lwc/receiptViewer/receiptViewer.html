@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="Receipts" icon-name="standard:file">
+        <div slot="actions">
+            <lightning-file-upload
+                label="Upload Receipt"
+                name="receiptUpload"
+                record-id={expenseId}
+                accept={acceptedFormats}
+                onuploadfinished={handleUploadFinished}
+                multiple>
+            </lightning-file-upload>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading receipts"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasReceipts}>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <template for:each={receipts} for:item="receipt">
+                        <div key={receipt.id} class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                            <lightning-card>
+                                <div class="slds-p-around_small">
+                                    <template lwc:if={receipt.thumbnailUrl}>
+                                        <img src={receipt.thumbnailUrl} alt={receipt.name} class="slds-image" style="max-width:120px;max-height:90px;cursor:pointer;" data-url={receipt.url} onclick={handlePreview}>
+                                    </template>
+                                    <template lwc:else>
+                                        <lightning-icon icon-name="doctype:pdf" size="large" data-url={receipt.url} onclick={handlePreview}></lightning-icon>
+                                    </template>
+                                    <p class="slds-text-body_small slds-m-top_xx-small">{receipt.name}</p>
+                                    <p class="slds-text-body_small slds-text-color_weak">{receipt.size} &bull; {receipt.uploadDate}</p>
+                                    <div class="slds-m-top_x-small">
+                                        <lightning-button
+                                            label="Remove"
+                                            variant="destructive-text"
+                                            data-id={receipt.id}
+                                            onclick={handleRemove}>
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </lightning-card>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:elseif={!isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <p class="slds-text-body_regular slds-text-color_weak">No receipts attached to this expense.</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

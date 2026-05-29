@@ -1,0 +1,87 @@
+<template>
+    <lightning-card title="Tax Configuration" icon-name="standard:currency">
+        <lightning-button
+            label="New Tax Rate"
+            variant="brand"
+            slot="actions"
+            onclick={handleOpenCreateModal}
+        ></lightning-button>
+
+        <div class="slds-m-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <lightning-datatable
+                key-field="id"
+                data={taxRates}
+                columns={columns}
+                draft-values={draftValues}
+                onsave={handleSave}
+                hide-checkbox-column
+            ></lightning-datatable>
+        </div>
+    </lightning-card>
+
+    <template if:true={showCreateModal}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseCreateModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Create Tax Rate</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        label="Name"
+                        data-field="name"
+                        value={newTaxRate.name}
+                        onchange={handleInputChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        label="Rate (%)"
+                        type="number"
+                        step="0.01"
+                        data-field="rate"
+                        value={newTaxRate.rate}
+                        onchange={handleInputChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        label="Code"
+                        data-field="code"
+                        value={newTaxRate.code}
+                        onchange={handleInputChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        label="Enabled"
+                        type="checkbox"
+                        data-field="enabled"
+                        checked={newTaxRate.enabled}
+                        onchange={handleInputChange}
+                    ></lightning-input>
+                    <lightning-input
+                        label="Set as Default"
+                        type="checkbox"
+                        data-field="isDefault"
+                        checked={newTaxRate.isDefault}
+                        onchange={handleInputChange}
+                    ></lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseCreateModal}></lightning-button>
+                    <lightning-button
+                        label="Create"
+                        variant="brand"
+                        onclick={handleCreateTaxRate}
+                        disabled={isLoading}
+                    ></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
