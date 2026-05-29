@@ -1,0 +1,112 @@
+<template>
+    <lightning-card title="Approval Workflow Builder" icon-name="standard:approval">
+        <lightning-button
+            label="Add Approver"
+            variant="brand"
+            slot="actions"
+            onclick={handleOpenAddModal}
+        ></lightning-button>
+
+        <div class="slds-m-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template if:true={approvers.length}>
+                <ol class="slds-list_ordered">
+                    <template for:each={approvers} for:item="approver">
+                        <li key={approver.id} class="slds-item slds-box slds-m-bottom_x-small">
+                            <div class="slds-grid slds-grid_vertical-align-center">
+                                <div class="slds-col slds-size_1-of-12">
+                                    <span class="slds-badge">{approver.order}</span>
+                                </div>
+                                <div class="slds-col slds-size_3-of-12">
+                                    <p class="slds-text-body_regular slds-text-title_bold">{approver.name}</p>
+                                </div>
+                                <div class="slds-col slds-size_3-of-12">
+                                    <p class="slds-text-body_small">Limit: ${approver.approvalLimit}</p>
+                                </div>
+                                <div class="slds-col slds-size_5-of-12 slds-text-align_right">
+                                    <lightning-button-group>
+                                        <lightning-button
+                                            label="Move Up"
+                                            data-id={approver.id}
+                                            onclick={handleMoveUp}
+                                            disabled={approver.isFirst}
+                                        ></lightning-button>
+                                        <lightning-button
+                                            label="Move Down"
+                                            data-id={approver.id}
+                                            onclick={handleMoveDown}
+                                            disabled={approver.isLast}
+                                        ></lightning-button>
+                                        <lightning-button
+                                            label="Remove"
+                                            variant="destructive"
+                                            data-id={approver.id}
+                                            onclick={handleRemove}
+                                        ></lightning-button>
+                                    </lightning-button-group>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ol>
+            </template>
+
+            <template if:false={approvers.length}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <p class="slds-text-body_regular">No approvers configured. Add an approver to build the workflow.</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+
+    <template if:true={showAddModal}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseAddModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Add Approver</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        label="Approver Name"
+                        data-field="name"
+                        value={newApprover.name}
+                        onchange={handleInputChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        label="Email"
+                        type="email"
+                        data-field="email"
+                        value={newApprover.email}
+                        onchange={handleInputChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        label="Approval Limit"
+                        type="number"
+                        formatter="currency"
+                        data-field="approvalLimit"
+                        value={newApprover.approvalLimit}
+                        onchange={handleInputChange}
+                    ></lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseAddModal}></lightning-button>
+                    <lightning-button
+                        label="Add"
+                        variant="brand"
+                        onclick={handleAddApprover}
+                        disabled={isLoading}
+                    ></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

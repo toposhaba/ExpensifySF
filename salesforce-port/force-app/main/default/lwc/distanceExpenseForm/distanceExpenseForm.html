@@ -1,0 +1,62 @@
+<template>
+    <lightning-card title="Create Distance Expense" icon-name="standard:location">
+        <div class="slds-m-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <div class="slds-form">
+                <lightning-combobox
+                    label="Policy"
+                    value={policyId}
+                    options={policies}
+                    onchange={handlePolicyChange}
+                    placeholder="Select a policy"
+                    required
+                ></lightning-combobox>
+
+                <lightning-input
+                    label="Distance"
+                    type="number"
+                    step="0.1"
+                    value={distance}
+                    onchange={handleDistanceChange}
+                    required
+                ></lightning-input>
+
+                <lightning-combobox
+                    label="Unit"
+                    value={unit}
+                    options={unitOptions}
+                    onchange={handleUnitChange}
+                ></lightning-combobox>
+
+                <lightning-combobox
+                    label="Report (Optional)"
+                    value={reportId}
+                    options={reports}
+                    onchange={handleReportChange}
+                    placeholder="Select a report"
+                ></lightning-combobox>
+
+                <div class="slds-box slds-m-top_medium slds-theme_shade">
+                    <p class="slds-text-heading_small">
+                        Calculated Amount: <strong>{formattedAmount}</strong>
+                    </p>
+                    <p class="slds-text-body_small slds-m-top_xx-small">
+                        Rate: ${ratePerUnit} per {unit}
+                    </p>
+                </div>
+
+                <div class="slds-m-top_medium">
+                    <lightning-button
+                        label="Save"
+                        variant="brand"
+                        onclick={handleSave}
+                        disabled={isSaveDisabled}
+                    ></lightning-button>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

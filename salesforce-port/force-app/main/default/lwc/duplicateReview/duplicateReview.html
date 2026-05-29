@@ -1,0 +1,73 @@
+<template>
+    <lightning-card title="Duplicate Expense Review" icon-name="standard:merge">
+        <lightning-button
+            label="Find Duplicates"
+            variant="brand"
+            slot="actions"
+            onclick={handleFindDuplicates}
+            disabled={isLoading}
+        ></lightning-button>
+
+        <div class="slds-m-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template if:false={hasDuplicates}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <p class="slds-text-body_regular">Click "Find Duplicates" to scan for duplicate expenses.</p>
+                </div>
+            </template>
+
+            <template if:true={hasDuplicates}>
+                <template for:each={duplicateGroups} for:item="group">
+                    <div key={group.groupIndex} class="slds-box slds-m-bottom_medium">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">
+                            Duplicate Group: {group.merchantName} - {group.amount}
+                        </h3>
+                        <table class="slds-table slds-table_bordered">
+                            <thead>
+                                <tr>
+                                    <th>Keep</th>
+                                    <th>Date</th>
+                                    <th>Merchant</th>
+                                    <th>Amount</th>
+                                    <th>Category</th>
+                                    <th>Report</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={group.expenses} for:item="expense">
+                                    <tr key={expense.id}>
+                                        <td>
+                                            <lightning-input
+                                                type="radio"
+                                                name={group.groupIndex}
+                                                data-group={group.groupIndex}
+                                                data-id={expense.id}
+                                                onchange={handleSelectKeep}
+                                            ></lightning-input>
+                                        </td>
+                                        <td>{expense.date}</td>
+                                        <td>{expense.merchantName}</td>
+                                        <td>{expense.amount}</td>
+                                        <td>{expense.category}</td>
+                                        <td>{expense.reportName}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        <div class="slds-m-top_small">
+                            <lightning-button
+                                label="Merge"
+                                variant="brand"
+                                data-group={group.groupIndex}
+                                onclick={handleMerge}
+                            ></lightning-button>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
