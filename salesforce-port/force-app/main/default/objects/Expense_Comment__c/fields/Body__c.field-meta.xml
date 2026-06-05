@@ -5,5 +5,4 @@
     <type>LongTextArea</type>
     <length>32000</length>
     <visibleLines>4</visibleLines>
-    <required>true</required>
 </CustomField>

@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Export Report" icon-name="utility:download">
+        <div class="slds-p-around_medium">
+            <template lwc:if={allowExport}>
+                <lightning-button
+                    label="Download CSV"
+                    variant="brand"
+                    icon-name="utility:download"
+                    disabled={exportDisabled}
+                    onclick={handleDownloadCsv}>
+                </lightning-button>
+                <lightning-button
+                    label="Open PDF"
+                    variant="neutral"
+                    icon-name="utility:pdf_ext"
+                    class="slds-m-left_x-small"
+                    disabled={exportDisabled}
+                    onclick={handleOpenPdf}>
+                </lightning-button>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-color_weak">You do not have permission to export this report.</p>
+            </template>
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Exporting" size="small"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

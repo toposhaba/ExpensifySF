@@ -1,0 +1,71 @@
+<template>
+    <lightning-card title="Import Transactions" icon-name="standard:file">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Importing"></lightning-spinner>
+            </template>
+
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-combobox
+                        label="Policy/Workspace"
+                        value={selectedPolicyId}
+                        options={policyOptions}
+                        onchange={handlePolicyChange}>
+                    </lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small slds-align-bottom">
+                    <input
+                        type="file"
+                        accept=".csv,text/csv"
+                        onchange={handleFileChange}
+                        class="slds-file-selector__input" />
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                    <lightning-textarea
+                        label="CSV Data"
+                        placeholder="Date,Merchant,Amount,Currency,Category"
+                        value={csvBody}
+                        onchange={handleTextChange}>
+                    </lightning-textarea>
+                </div>
+            </div>
+
+            <div class="slds-m-top_small">
+                <lightning-button
+                    label="Import"
+                    variant="brand"
+                    onclick={handleImport}
+                    disabled={isImportDisabled}>
+                </lightning-button>
+                <lightning-button
+                    label="Clear"
+                    onclick={handleClear}
+                    class="slds-m-left_x-small">
+                </lightning-button>
+            </div>
+
+            <template lwc:if={hasResults}>
+                <div class="slds-m-top_medium">
+                    <lightning-tile label="Summary">
+                        <p>Total rows: {summary.totalRows}</p>
+                        <p>Imported: {summary.successCount}</p>
+                        <p>Errors: {summary.errorCount}</p>
+                        <p>Total amount: {summary.totalAmount}</p>
+                    </lightning-tile>
+                </div>
+
+                <div class="slds-m-top_small">
+                    <lightning-datatable
+                        key-field="rowNumber"
+                        data={rows}
+                        columns={resultColumns}
+                        hide-checkbox-column>
+                    </lightning-datatable>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

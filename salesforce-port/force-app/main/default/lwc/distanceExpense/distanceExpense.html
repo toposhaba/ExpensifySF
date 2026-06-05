@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Distance Expense" icon-name="standard:travel_mode">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                    <lightning-combobox
+                        label="Policy/Workspace"
+                        value={selectedPolicyId}
+                        options={policyOptions}
+                        onchange={handlePolicyChange}
+                        required
+                    ></lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input
+                        type="number"
+                        label="Distance"
+                        value={distance}
+                        onchange={handleDistanceChange}
+                        step="0.1"
+                        min="0"
+                        required
+                    ></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-combobox
+                        label="Unit"
+                        value={unit}
+                        options={unitOptions}
+                        onchange={handleUnitChange}
+                        required
+                    ></lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input
+                        type="date"
+                        label="Date"
+                        value={expenseDate}
+                        onchange={handleDateChange}
+                    ></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input
+                        type="text"
+                        label="Merchant"
+                        value={merchant}
+                        onchange={handleMerchantChange}
+                    ></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                    <lightning-textarea
+                        label="Description"
+                        value={description}
+                        onchange={handleDescriptionChange}
+                    ></lightning-textarea>
+                </div>
+            </div>
+
+            <template lwc:if={hasPreview}>
+                <div class="slds-box slds-box_xx-small slds-m-top_small slds-theme_shade">
+                    <p class="slds-text-heading_small">Estimated amount: {formattedAmount}</p>
+                </div>
+            </template>
+
+            <template lwc:if={previewError}>
+                <div class="slds-text-color_error slds-m-top_small">{previewError}</div>
+            </template>
+
+            <div class="slds-m-top_medium">
+                <lightning-button
+                    label="Preview Amount"
+                    onclick={handlePreview}
+                    disabled={previewDisabled}
+                ></lightning-button>
+                <lightning-button
+                    label="Create Expense"
+                    variant="brand"
+                    onclick={handleCreate}
+                    disabled={createDisabled}
+                    class="slds-m-left_x-small"
+                ></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

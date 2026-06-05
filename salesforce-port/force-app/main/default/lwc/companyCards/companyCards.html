@@ -1,0 +1,77 @@
+<template>
+    <lightning-card title="Company Cards" icon-name="standard:partner_fund">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Working"></lightning-spinner>
+            </template>
+
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-combobox
+                        label="Policy/Workspace"
+                        value={selectedPolicyId}
+                        options={policyOptions}
+                        onchange={handlePolicyChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-combobox
+                        label="Card"
+                        value={selectedCardId}
+                        options={cardOptions}
+                        onchange={handleCardChange}>
+                    </lightning-combobox>
+                </div>
+            </div>
+
+            <template lwc:if={hasCards}>
+                <div class="slds-box slds-m-top_small">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Import Feed Transactions</h3>
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                            <input
+                                type="file"
+                                accept=".csv,text/csv"
+                                onchange={handleFileChange}
+                                class="slds-file-selector__input" />
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                            <lightning-textarea
+                                label="CSV Data"
+                                placeholder="Date,Merchant,Amount,Currency"
+                                value={csvBody}
+                                onchange={handleTextChange}>
+                            </lightning-textarea>
+                        </div>
+                    </div>
+                    <lightning-button
+                        label="Import"
+                        variant="brand"
+                        onclick={handleImport}
+                        disabled={isImportDisabled}>
+                    </lightning-button>
+                </div>
+
+                <div class="slds-m-top_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Transactions</h3>
+                    <template lwc:if={hasTransactions}>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={transactions}
+                            columns={txnColumns}
+                            onrowaction={handleRowAction}
+                            hide-checkbox-column>
+                        </lightning-datatable>
+                    </template>
+                    <template lwc:else>
+                        <p class="slds-text-body_regular">No transactions for this card yet.</p>
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:else>
+                <p class="slds-text-body_regular slds-m-top_small">No cards found for this workspace.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

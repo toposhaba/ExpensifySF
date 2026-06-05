@@ -1,106 +1,77 @@
-<div align="center">
-    <a href="https://new.expensify.com">
-        <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Expensify Icon">
-    </a>
-    <h1>
-        <a href="https://new.expensify.com">
-            New Expensify
-        </a>
-    </h1>
-</div>
+# ExpensifySF
 
-#### Table of Contents
-* [Local Development](#local-development)
-* [Platform-Specific Setup](#platform-specific-setup)
-* [Testing on browsers in simulators and emulators](#testing-on-browsers-in-simulators-and-emulators)
-* [Running The Tests](#running-the-tests)
+Salesforce-native expense management port. All application metadata, Apex, LWC, and tests live under [`salesforce-port/`](salesforce-port/).
 
-#### Additional Reading
-* [Application Philosophy](contributingGuides/philosophies/INDEX.md)
-* [API Details](contributingGuides/API.md)
-* [Contributing to Expensify](contributingGuides/CONTRIBUTING.md)
-* [Expensify Code of Conduct](CODE_OF_CONDUCT.md)
-* [Contributor License Agreement](CLA.md)
-* [React StrictMode](contributingGuides/STRICT_MODE.md)
-* [Left Hand Navigation(LHN)](contributingGuides/LEFT_HAND_NAVIGATION.md)
-* [HybridApp - additional info & troubleshooting](contributingGuides/HYBRID_APP.md)
+## Documentation
 
-----
+| Doc | Purpose |
+|-----|---------|
+| [`salesforce-port/PORTING_PLAN.md`](salesforce-port/PORTING_PLAN.md) | Architecture and mapping from Expensify concepts |
+| [`salesforce-port/MIGRATION_TRACKER.md`](salesforce-port/MIGRATION_TRACKER.md) | Feature waves and deletion gate status |
+| [`salesforce-port/SRC_AUDIT.md`](salesforce-port/SRC_AUDIT.md) | React Native source audit (historical reference) |
+| [`salesforce-port/FEATURE_AUDIT.md`](salesforce-port/FEATURE_AUDIT.md) | Feature parity matrix |
 
-# Local development
-These instructions should get you set up ready to work on New Expensify 🙌
+## Prerequisites
 
-## Getting Started
-1. Install `nvm` then `node` & `npm`: `brew install nvm && nvm install`
-2. Install `watchman`: `brew install watchman`
-3. Install dependencies: `npm install`
-4. Run the specific platform with the following command: `npm run <platform>`, e.g. `npm run web`
+- [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli) (`sf`)
+- Dev Hub enabled (for scratch orgs)
+- Node.js optional (CLI only)
 
-You can use any IDE or code editing tool for developing on any platform. Use your favorite!
+## Windows clone note
 
-## Recommended `node` setup
-In order to have more consistent builds, we use a strict `node` and `npm` version as defined in the `package.json` `engines` field and `.nvmrc` file. `npm install` will fail if you do not use the version defined, so it is recommended to install `node` via `nvm` for easy node version management. Automatic `node` version switching can be installed for [`zsh`](https://github.com/nvm-sh/nvm#zsh) or [`bash`](https://github.com/nvm-sh/nvm#bash) using `nvm`.
+If cloning on Windows, enable long paths:
 
-# Platform-Specific Setup
-For detailed setup instructions for each platform, see the following guides:
+```powershell
+git config --global core.longpaths true
+```
 
-* **🕸 Web Development**: [Web Setup Instructions](contributingGuides/SETUP_WEB.md)
-* **📱 iOS Development**: [iOS Setup Instructions](contributingGuides/SETUP_IOS.md)  
-* **🤖 Android Development**: [Android Setup Instructions](contributingGuides/SETUP_ANDROID.md)
+Or use [`scripts/clone-repo.ps1`](scripts/clone-repo.ps1).
 
-**Optional AI-assisted mobile testing:** If you use Claude Code, the [`/agent-device` skill](.claude/skills/agent-device/SKILL.md) drives iOS and Android simulators or devices for interactive testing, debugging, and performance profiling. Requires `npm install -g agent-device`.
+## Scratch org setup
 
-## General Troubleshooting
-1. If you are having issues with **_Getting Started_**, please reference [React Native's Documentation](https://reactnative.dev/docs/environment-setup)
-2. If you are running into CORS errors like (in the browser dev console)
-   ```sh
-   Access to fetch at 'https://www.expensify.com/api/BeginSignIn' from origin 'http://localhost:8080' has been blocked by CORS policy
-   ```
-   You probably have a misconfigured `.env` file - remove it (`rm .env`) and try again.
+```powershell
+cd salesforce-port
+sf org login web --set-default-dev-hub --alias devOrg
+sf org create scratch --definition-file config/project-scratch-def.json --alias expensify-sf --duration-days 7 --set-default
+sf org assign permset --name Expense_Admin --target-org expensify-sf
+```
 
-**Note:** Expensify engineers that will be testing with the API in your local dev environment please refer to [these additional instructions](https://stackoverflow.com/c/expensify/questions/7699/7700).
+Assign admin FLS for tests (scratch org admin user):
 
-## Environment variables
-Creating an `.env` file is not necessary. We advise external contributors against it. It can lead to errors when
-variables referenced here get updated since your local `.env` file is ignored.
+```powershell
+sf apex run --file scripts/assign-expense-admin.apex --target-org expensify-sf
+```
 
-- `NEW_EXPENSIFY_URL` - The root URL used for the website
-- `SECURE_EXPENSIFY_URL` - The URL used to hit the Expensify secure API
-- `EXPENSIFY_URL` - The URL used to hit the Expensify API
-- `EXPENSIFY_PARTNER_NAME` - Constant used for the app when authenticating.
-- `EXPENSIFY_PARTNER_PASSWORD` - Another constant used for the app when authenticating. (This is OK to be public)
-- `PUSHER_APP_KEY` - Key used to authenticate with Pusher.com
-- `SECURE_NGROK_URL` - Secure URL used for `ngrok` when testing
-- `NGROK_URL` - URL used for `ngrok` when testing
-- `USE_NGROK` - Flag to turn `ngrok` testing on or off
-- `USE_WDYR` - Flag to turn [`Why Did You Render`](https://github.com/welldone-software/why-did-you-render) testing on or off
-- `USE_REDUX_DEVTOOLS` - Flag to enable [Redux DevTools](https://github.com/reduxjs/redux-devtools) for Onyx state debugging
-- `USE_WEB_PROXY`⚠️- Used in web development, it starts a server along the local development server to proxy
-   requests to the backend. External contributors should set this to `true` otherwise they'll have CORS errors.
-   If you don't want to start the proxy server set this explicitly to `false`
-- `CAPTURE_METRICS` (optional) - Set this to `true` to capture performance metrics and see them in Flipper
-   see [PERFORMANCE.md](contributingGuides/PERFORMANCE.md#performance-metrics-opt-in-on-local-release-builds) for more information
-- `ONYX_METRICS` (optional) - Set this to `true` to capture even more performance metrics and see them in Flipper
-   see [React-Native-Onyx#benchmarks](https://github.com/Expensify/react-native-onyx#benchmarks) for more information
+## Deploy
 
-> If your changes to .env aren't having an effect, try `rm -rf .rock`, then re-run `npm run ios` or `npm run android`
+```powershell
+cd salesforce-port
+sf project deploy start --source-dir force-app/main/default --target-org expensify-sf --test-level NoTestRun --ignore-conflicts
+```
 
-----
+Validate before release:
 
-# Running the tests
-## Unit tests
-Unit tests are valuable when you want to test one component. They should be short, fast, and ideally only test one thing.
-Often times in order to write a unit test, you may need to mock data, a component, or library. We use the library [Jest](https://jestjs.io/)
-to help run our Unit tests.
+```powershell
+sf project deploy validate --source-dir force-app/main/default --target-org expensify-sf --test-level RunLocalTests --wait 30
+```
 
-* To run the **Jest unit tests**: `npm run test`
-* UI tests guidelines can be found [here](tests/ui/README.md)
+## Tests
 
-## Performance tests
-We use Reassure for monitoring performance regression. More detailed information can be found [here](tests/perf-test/README.md):
+```powershell
+cd salesforce-port
+sf apex run test --target-org expensify-sf --code-coverage --result-format human --wait 30
+```
 
-## CodeCov
+## Permission sets
 
-[CodeCov](https://about.codecov.io/) is the service we use to measure and track code coverage. You can find out more about it [here](contributingGuides/CodeCov.md)
+| Set | Audience |
+|-----|----------|
+| `Expense_User` | Submitters |
+| `Expense_Approver` | Approvers |
+| `Expense_Admin` | Workspace admins |
 
-----
+Assign via **Setup → Permission Set Assignments** or `sf org assign permset`.
+
+## App
+
+After deploy, open the **Expensify Expense Management** Lightning app and assign permission sets to users.

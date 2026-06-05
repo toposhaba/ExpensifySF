@@ -11,5 +11,5 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Expense Tags</pluralLabel>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

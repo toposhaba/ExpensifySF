@@ -1,0 +1,79 @@
+<apex:page controller="ExpenseReportPdfController" renderAs="pdf" applyHtmlTag="false" showHeader="false" sidebar="false">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <style type="text/css">
+            body { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #16325c; }
+            h1 { font-size: 18px; margin-bottom: 4px; }
+            .meta { margin-bottom: 16px; }
+            .meta div { margin-bottom: 2px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+            th { background-color: #f3f3f3; text-align: left; border-bottom: 1px solid #cccccc; padding: 6px; }
+            td { border-bottom: 1px solid #eeeeee; padding: 6px; }
+            .amount { text-align: right; }
+            .total { font-weight: bold; }
+            .empty { margin-top: 16px; font-style: italic; }
+        </style>
+    </head>
+    <body>
+        <apex:outputPanel rendered="{!report != null}">
+            <h1>{!report.Name}</h1>
+            <div class="meta">
+                <div><strong>Status:</strong> {!report.Status__c}</div>
+                <div><strong>Policy:</strong> {!report.Policy__r.Name}</div>
+                <div><strong>Owner:</strong> {!report.Owner.Name}</div>
+                <div><strong>Total Amount:</strong> {!report.Currency__c} {!report.Total_Amount__c}</div>
+                <div><strong>Reimbursable Total:</strong> {!report.Currency__c} {!report.Reimbursable_Total__c}</div>
+                <div><strong>Expense Count:</strong> {!report.Expense_Count__c}</div>
+                <div><strong>Generated:</strong>
+                    <apex:outputText value="{0,date,yyyy-MM-dd}">
+                        <apex:param value="{!generatedDate}" />
+                    </apex:outputText>
+                </div>
+            </div>
+
+            <apex:outputPanel rendered="{!hasExpenses}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Merchant</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th class="amount">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!expenses}" var="exp">
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{0,date,yyyy-MM-dd}">
+                                        <apex:param value="{!exp.Expense_Date__c}" />
+                                    </apex:outputText>
+                                </td>
+                                <td>{!exp.Merchant__c}</td>
+                                <td>{!exp.Category__r.Name}</td>
+                                <td>{!exp.Expense_Type__c}</td>
+                                <td>{!exp.Status__c}</td>
+                                <td class="amount">{!exp.Currency__c} {!exp.Amount__c}</td>
+                            </tr>
+                        </apex:repeat>
+                        <tr class="total">
+                            <td colspan="5">Total</td>
+                            <td class="amount">{!report.Currency__c} {!report.Total_Amount__c}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!NOT(hasExpenses)}">
+                <p class="empty">No expenses found for this report.</p>
+            </apex:outputPanel>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!report == null}">
+            <p class="empty">No report selected.</p>
+        </apex:outputPanel>
+    </body>
+</html>
+</apex:page>

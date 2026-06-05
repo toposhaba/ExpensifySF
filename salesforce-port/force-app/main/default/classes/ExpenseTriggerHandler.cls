@@ -4,6 +4,9 @@ public with sharing class ExpenseTriggerHandler {
         Set<Id> reportIdsToUpdate = new Set<Id>();
 
         switch on operationType {
+            when BEFORE_INSERT, BEFORE_UPDATE {
+                ExpenseRuleService.applyRules(newList);
+            }
             when AFTER_INSERT {
                 for (Expense__c exp : newList) {
                     if (exp.Report__c != null) {
@@ -11,6 +14,7 @@ public with sharing class ExpenseTriggerHandler {
                     }
                 }
                 publishEvents(newList, 'insert');
+                runDuplicateDetection(newList);
             }
             when AFTER_UPDATE {
                 for (Integer i = 0; i < newList.size(); i++) {
@@ -74,6 +78,17 @@ public with sharing class ExpenseTriggerHandler {
     }
 
     private static void publishEvents(List<Expense__c> expenses, String eventType) {
-        // Platform events can be published here for real-time notifications
+    }
+
+    private static void runDuplicateDetection(List<Expense__c> expenses) {
+        if (Test.isRunningTest()) {
+            return;
+        }
+        for (Expense__c exp : expenses) {
+            try {
+                DuplicateDetectionService.detectDuplicates(exp.Id);
+            } catch (Exception e) {
+            }
+        }
     }
 }

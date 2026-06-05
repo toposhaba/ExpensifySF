@@ -6,5 +6,5 @@
     <referenceTo>User</referenceTo>
     <relationshipLabel>Policy Memberships</relationshipLabel>
     <relationshipName>Policy_Memberships</relationshipName>
-    <required>true</required>
+    <required>false</required>
 </CustomField>

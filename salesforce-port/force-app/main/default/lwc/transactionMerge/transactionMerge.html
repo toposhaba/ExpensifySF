@@ -1,0 +1,91 @@
+<template>
+    <lightning-card title="Merge Expenses" icon-name="standard:merge">
+        <div class="slds-p-around_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+            <template lwc:elseif={isLoaded}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-radio-group
+                        label="Keep which expense (survivor)"
+                        type="button"
+                        options={survivorOptions}
+                        value={survivorId}
+                        onchange={handleSurvivorChange}
+                    ></lightning-radio-group>
+                </div>
+
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col"><div class="slds-truncate">Field</div></th>
+                            <th scope="col"><div class="slds-truncate">Expense A</div></th>
+                            <th scope="col"><div class="slds-truncate">Expense B</div></th>
+                            <th scope="col"><div class="slds-truncate">Keep</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={rows} for:item="row">
+                            <tr key={row.field}>
+                                <td><div class="slds-truncate">{row.label}</div></td>
+                                <td><div class="slds-truncate">{row.valueA}</div></td>
+                                <td><div class="slds-truncate">{row.valueB}</div></td>
+                                <td>
+                                    <lightning-radio-group
+                                        variant="label-hidden"
+                                        type="button"
+                                        data-field={row.field}
+                                        options={row.options}
+                                        value={row.selected}
+                                        onchange={handleSelectionChange}
+                                    ></lightning-radio-group>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+                <div class="slds-m-top_medium slds-grid slds-grid_align-end">
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleReset}
+                        class="slds-m-right_x-small"
+                    ></lightning-button>
+                    <lightning-button
+                        label="Merge"
+                        variant="destructive"
+                        onclick={handleMerge}
+                        disabled={isLoading}
+                    ></lightning-button>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-gutters slds-grid_vertical-align-end">
+                    <div class="slds-col slds-size_5-of-12">
+                        <lightning-input
+                            type="text"
+                            label="First Expense Id"
+                            value={firstExpenseId}
+                            onchange={handleFirstIdChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_5-of-12">
+                        <lightning-input
+                            type="text"
+                            label="Second Expense Id"
+                            value={secondExpenseId}
+                            onchange={handleSecondIdChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12">
+                        <lightning-button
+                            label="Compare"
+                            variant="brand"
+                            onclick={handleLoad}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

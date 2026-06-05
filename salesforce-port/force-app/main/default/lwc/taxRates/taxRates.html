@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Tax Rates" icon-name="standard:product_consumed">
+        <lightning-button slot="actions" label="New Tax Rate" onclick={handleNew}
+            disabled={showForm} variant="brand"></lightning-button>
+
+        <div class="slds-p-around_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasPolicies}>
+                <lightning-combobox label="Workspace" value={selectedPolicyId}
+                    options={policies} onchange={handlePolicyChange}
+                    class="slds-m-bottom_medium"></lightning-combobox>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-color_weak">No workspaces found.</p>
+            </template>
+
+            <template lwc:if={hasSelectedPolicy}>
+                <lightning-datatable key-field="Id" data={taxRates} columns={columns}
+                    hide-checkbox-column onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </template>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={showForm}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">{formTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input type="text" label="Name" value={draftName}
+                        onchange={handleNameChange} required></lightning-input>
+                    <lightning-input type="text" label="Code" value={draftCode}
+                        onchange={handleCodeChange}></lightning-input>
+                    <lightning-input type="number" label="Rate Percent" value={draftRate}
+                        onchange={handleRateChange} step="0.01" min="0" max="100"></lightning-input>
+                    <lightning-input type="checkbox" label="Enabled" checked={draftEnabled}
+                        onchange={handleEnabledChange}></lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCancel}
+                        class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

@@ -223,16 +223,23 @@ public with sharing class ExpenseService {
         if (reportId == null) return;
 
         AggregateResult[] results = [
-            SELECT SUM(Amount__c) totalAmount, COUNT(Id) expenseCount,
-                   SUM(CASE WHEN Reimbursable__c = true THEN Amount__c ELSE 0 END) reimbursableTotal
+            SELECT SUM(Amount__c) totalAmount, COUNT(Id) expenseCount
             FROM Expense__c
             WHERE Report__c = :reportId
+        ];
+
+        AggregateResult[] reimbResults = [
+            SELECT SUM(Amount__c) reimbursableTotal
+            FROM Expense__c
+            WHERE Report__c = :reportId AND Reimbursable__c = true
         ];
 
         if (!results.isEmpty()) {
             Decimal total = (Decimal) results[0].get('totalAmount');
             Integer count = (Integer) results[0].get('expenseCount');
-            Decimal reimbursable = (Decimal) results[0].get('reimbursableTotal');
+            Decimal reimbursable = !reimbResults.isEmpty()
+                ? (Decimal) reimbResults[0].get('reimbursableTotal')
+                : 0;
 
             Expense_Report__c report = new Expense_Report__c(
                 Id = reportId,

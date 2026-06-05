@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Upload Receipt" icon-name="utility:upload">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Uploading" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={isDisabled}>
+                <p class="slds-text-color_weak">Save the expense before uploading a receipt.</p>
+            </template>
+
+            <template lwc:else>
+                <lightning-file-upload
+                    label="Attach receipt"
+                    name="receiptUploader"
+                    accept={acceptedFormats}
+                    record-id={recordId}
+                    multiple
+                    onuploadfinished={handleUploadFinished}>
+                </lightning-file-upload>
+            </template>
+        </div>
+    </lightning-card>
+</template>

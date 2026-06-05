@@ -85,11 +85,17 @@ public with sharing class ExpenseReportService {
             if (policy.Auto_Approve_Limit__c != null
                 && report.Total_Amount__c <= policy.Auto_Approve_Limit__c
                 && violations.isEmpty()) {
-                approveReport(reportId);
+                return approveReport(reportId);
             }
         }
 
-        return report;
+        return [
+            SELECT Id, Name, Status__c, Total_Amount__c, Currency__c, Policy__c,
+                   Submitted_Date__c, Approved_Date__c, Approver__c
+            FROM Expense_Report__c
+            WHERE Id = :reportId
+            LIMIT 1
+        ];
     }
 
     public static Expense_Report__c approveReport(Id reportId) {
@@ -167,6 +173,12 @@ public with sharing class ExpenseReportService {
 
         if (!members.isEmpty() && members[0].Submits_To__c != null) {
             return members[0].Submits_To__c;
+        }
+
+        ApprovalWorkflowService.ApproverResolution resolution =
+            ApprovalWorkflowService.resolveNextApprover(report.Policy__c, report.Total_Amount__c, null);
+        if (resolution.hasApprover) {
+            return resolution.approverId;
         }
 
         List<Approval_Chain__c> chains = [

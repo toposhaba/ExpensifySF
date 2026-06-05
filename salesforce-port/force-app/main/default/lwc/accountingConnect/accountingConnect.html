@@ -1,0 +1,59 @@
+<template>
+    <lightning-card title="Accounting Integrations" icon-name="standard:apps">
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={hasConnections}>
+                <ul class="slds-has-dividers_bottom-space">
+                    <template for:each={connections} for:item="c">
+                        <li key={c.key} class="slds-item slds-p-around_small">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <span class="slds-text-heading_small">{c.label}</span>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4 slds-text-color_weak">
+                                    {c.namedCredential}
+                                </div>
+                                <div class="slds-col slds-size_1-of-4 slds-text-align_right">
+                                    <span class={c.statusClass}>{c.statusLabel}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template lwc:else>
+                <p class="slds-p-around_medium slds-text-color_weak">
+                    No accounting connections are configured.
+                </p>
+            </template>
+        </div>
+
+        <div class="slds-p-around_medium slds-border_top">
+            <h3 class="slds-text-heading_small slds-m-bottom_small">Export Approved Report</h3>
+            <lightning-combobox
+                label="Approved Report"
+                placeholder="Select a report"
+                options={reportOptions}
+                value={selectedReportId}
+                onchange={handleReportChange}
+                class="slds-m-bottom_small">
+            </lightning-combobox>
+            <lightning-combobox
+                label="Provider"
+                placeholder="Select a provider"
+                options={providerOptions}
+                value={selectedProvider}
+                onchange={handleProviderChange}
+                class="slds-m-bottom_small">
+            </lightning-combobox>
+            <lightning-button
+                variant="brand"
+                label="Export"
+                disabled={canExportDisabled}
+                onclick={handleExport}>
+            </lightning-button>
+            <template lwc:if={isExporting}>
+                <lightning-spinner alternative-text="Exporting" size="small"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

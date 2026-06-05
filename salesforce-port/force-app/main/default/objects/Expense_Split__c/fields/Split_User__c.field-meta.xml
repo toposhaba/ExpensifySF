@@ -6,5 +6,5 @@
     <referenceTo>User</referenceTo>
     <relationshipLabel>Expense Splits</relationshipLabel>
     <relationshipName>Expense_Splits</relationshipName>
-    <required>true</required>
+    <required>false</required>
 </CustomField>

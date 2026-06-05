@@ -1,0 +1,156 @@
+<template>
+    <lightning-card title="Per Diem Rates" icon-name="standard:travel_mode">
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasPolicies}>
+                <lightning-combobox
+                    label="Workspace"
+                    value={selectedPolicyId}
+                    options={policies}
+                    onchange={handlePolicyChange}
+                    class="slds-m-bottom_medium">
+                </lightning-combobox>
+            </template>
+            <template lwc:else>
+                <p class="slds-p-vertical_medium slds-text-color_weak">No workspaces found.</p>
+            </template>
+
+            <template lwc:if={selectedPolicyId}>
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">
+                        <template lwc:if={isEditing}>Edit Rate</template>
+                        <template lwc:else>Add Rate</template>
+                    </h3>
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-5">
+                            <lightning-input
+                                data-form="rate"
+                                label="Destination"
+                                value={draftDestination}
+                                onchange={handleDestinationChange}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-5">
+                            <lightning-input
+                                data-form="rate"
+                                label="Sub Rate Name"
+                                value={draftSubRateName}
+                                onchange={handleSubRateNameChange}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-5">
+                            <lightning-input
+                                data-form="rate"
+                                type="number"
+                                label="Daily Rate"
+                                value={draftDailyRate}
+                                onchange={handleDailyRateChange}
+                                formatter="currency"
+                                step="0.01">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-5">
+                            <lightning-input
+                                data-form="rate"
+                                type="number"
+                                label="Meal Rate"
+                                value={draftMealRate}
+                                onchange={handleMealRateChange}
+                                formatter="currency"
+                                step="0.01">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-large-size_1-of-5">
+                            <lightning-input
+                                data-form="rate"
+                                label="Currency"
+                                value={draftCurrency}
+                                onchange={handleCurrencyChange}
+                                max-length="3">
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Save"
+                            variant="brand"
+                            disabled={isAddDisabled}
+                            onclick={handleSave}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+                        <template lwc:if={isEditing}>
+                            <lightning-button
+                                label="Cancel"
+                                onclick={handleCancel}>
+                            </lightning-button>
+                        </template>
+                    </div>
+                </div>
+
+                <template lwc:if={hasRates}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col"><div class="slds-truncate">Destination</div></th>
+                                <th scope="col"><div class="slds-truncate">Sub Rate</div></th>
+                                <th scope="col"><div class="slds-truncate">Daily Rate</div></th>
+                                <th scope="col"><div class="slds-truncate">Meal Rate</div></th>
+                                <th scope="col"><div class="slds-truncate">Currency</div></th>
+                                <th scope="col"><div class="slds-truncate">Actions</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={rates} for:item="rate">
+                                <tr key={rate.id} class="slds-hint-parent">
+                                    <td><div class="slds-truncate">{rate.destination}</div></td>
+                                    <td><div class="slds-truncate">{rate.subRateName}</div></td>
+                                    <td>
+                                        <lightning-formatted-number
+                                            value={rate.dailyRate}
+                                            format-style="currency"
+                                            currency-code={rate.currency}>
+                                        </lightning-formatted-number>
+                                    </td>
+                                    <td>
+                                        <template lwc:if={rate.mealRate}>
+                                            <lightning-formatted-number
+                                                value={rate.mealRate}
+                                                format-style="currency"
+                                                currency-code={rate.currency}>
+                                            </lightning-formatted-number>
+                                        </template>
+                                    </td>
+                                    <td><div class="slds-truncate">{rate.currency}</div></td>
+                                    <td>
+                                        <lightning-button-icon
+                                            icon-name="utility:edit"
+                                            alternative-text="Edit"
+                                            data-id={rate.id}
+                                            onclick={handleEdit}
+                                            class="slds-m-right_xx-small">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:delete"
+                                            variant="border-filled"
+                                            alternative-text="Remove"
+                                            data-id={rate.id}
+                                            onclick={handleDelete}>
+                                        </lightning-button-icon>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template lwc:else>
+                    <p class="slds-p-vertical_medium slds-text-color_weak">
+                        No per diem rates configured. Add the first destination rate above.
+                    </p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

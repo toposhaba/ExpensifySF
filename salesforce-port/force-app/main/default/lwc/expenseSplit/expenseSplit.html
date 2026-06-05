@@ -1,0 +1,76 @@
+<template>
+    <lightning-card title="Split Expense" icon-name="standard:relationship">
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Working"></lightning-spinner>
+        </template>
+
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={parentExpense}>
+                <p class="slds-text-body_regular slds-m-bottom_small">
+                    Splitting {parentExpense.Merchant__c} &mdash;
+                    <lightning-formatted-number value={parentAmount} format-style="currency"
+                        currency-code={parentExpense.Currency__c}></lightning-formatted-number>
+                </p>
+            </template>
+
+            <lightning-combobox label="Split Method" value={mode} options={modeOptions}
+                onchange={handleModeChange} class="slds-m-bottom_small"></lightning-combobox>
+
+            <template for:each={rows} for:item="row">
+                <div key={row.key} class="slds-grid slds-gutters slds-grid_vertical-align-end slds-m-bottom_x-small">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-record-picker label="User" object-api-name="User"
+                            data-key={row.key} onchange={handleUserChange}></lightning-record-picker>
+                    </div>
+
+                    <template lwc:if={isShareMode}>
+                        <div class="slds-col slds-size_4-of-12">
+                            <lightning-input type="number" label="Shares" value={row.share}
+                                data-key={row.key} onchange={handleShareChange}
+                                placeholder="1" step="1"></lightning-input>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="slds-col slds-size_4-of-12">
+                            <lightning-input type="number" label="Amount" value={row.amount}
+                                data-key={row.key} onchange={handleAmountChange}
+                                step="0.01" formatter="currency"></lightning-input>
+                        </div>
+                    </template>
+
+                    <div class="slds-col slds-size_2-of-12">
+                        <lightning-button-icon icon-name="utility:delete" data-key={row.key}
+                            alternative-text="Remove" onclick={handleRemoveRow}></lightning-button-icon>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:if={isShareMode}>
+                <p class="slds-text-body_small slds-text-color_weak slds-m-vertical_x-small">
+                    Amounts are calculated evenly by shares and always total the parent amount.
+                </p>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-body_small slds-m-vertical_x-small">
+                    Remaining to allocate:
+                    <lightning-formatted-number value={remainingAmount} format-style="currency"></lightning-formatted-number>
+                </p>
+            </template>
+
+            <div class="slds-m-vertical_small">
+                <lightning-button label="Add Split" icon-name="utility:add"
+                    onclick={handleAddRow} class="slds-m-right_x-small"></lightning-button>
+                <lightning-button label="Create Splits" variant="brand"
+                    onclick={handleCreate}></lightning-button>
+            </div>
+
+            <template lwc:if={hasExistingSplits}>
+                <div class="slds-m-top_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_x-small">Existing Splits</h3>
+                    <lightning-datatable key-field="Id" data={existingSplits} columns={columns}
+                        hide-checkbox-column></lightning-datatable>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

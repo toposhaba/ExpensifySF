@@ -1,0 +1,43 @@
+<template>
+    <lightning-card title="Bank Accounts" icon-name="standard:account">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input label="Account Name" value={accountName}
+                        onchange={handleNameChange} required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input label="Bank Name" value={bankName}
+                        onchange={handleBankNameChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input label="Account Number" value={accountNumber}
+                        onchange={handleAccountNumberChange} required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                    <lightning-input label="Routing Number" value={routingNumber}
+                        onchange={handleRoutingNumberChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                    <lightning-input type="checkbox" label="Set as default"
+                        checked={isDefault} onchange={handleDefaultChange}></lightning-input>
+                </div>
+            </div>
+            <div class="slds-m-top_small">
+                <lightning-button variant="brand" label="Add Bank Account"
+                    onclick={handleAdd} disabled={isSaveDisabled}></lightning-button>
+            </div>
+        </div>
+
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template lwc:if={hasAccounts}>
+                <lightning-datatable key-field="Id" data={accounts} columns={columns}
+                    hide-checkbox-column onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-color_weak">No bank accounts yet.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

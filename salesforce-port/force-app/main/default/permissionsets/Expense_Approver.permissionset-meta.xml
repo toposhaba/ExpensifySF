@@ -52,23 +52,129 @@
         <allowEdit>false</allowEdit>
         <allowDelete>false</allowDelete>
     </objectPermissions>
-    <fieldPermissions>
-        <field>Expense_Report__c.Status__c</field>
-        <editable>true</editable>
-        <readable>true</readable>
-    </fieldPermissions>
+    <objectPermissions>
+        <object>Expense_Receipt__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Expense_Comment__c</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Expense_Split__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Invoice__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Policy_Member__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Approval_Chain__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Accounting_Sync_Log__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Report_Field__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Report_Field_Value__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Tax_Rate__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Expense_Rule__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Distance_Rate__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Per_Diem_Rate__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+    </objectPermissions>
     <fieldPermissions>
         <field>Expense_Report__c.Approved_Date__c</field>
         <editable>true</editable>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Expense__c.Status__c</field>
+        <field>Expense__c.Hold_Reason__c</field>
         <editable>true</editable>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Expense__c.Hold_Reason__c</field>
+        <field>Expense_Violation__c.Status__c</field>
+        <editable>true</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Expense_Violation__c.Duplicate_Expense__c</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Approval_Chain__c.Is_Active__c</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Approval_Chain__c.Submits_To_Override__c</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Expense_Comment__c.Body__c</field>
         <editable>true</editable>
         <readable>true</readable>
     </fieldPermissions>

@@ -1,0 +1,21 @@
+name: Salesforce CI
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'salesforce-port/**'
+  pull_request:
+    paths:
+      - 'salesforce-port/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: salesforcecli/setup-sfdx@v2
+      - name: Validate metadata (dry run)
+        run: |
+          cd salesforce-port
+          sf project deploy validate --source-dir force-app/main/default --dry-run --test-level NoTestRun

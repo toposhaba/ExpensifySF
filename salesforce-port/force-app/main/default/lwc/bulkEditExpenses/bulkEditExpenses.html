@@ -1,0 +1,62 @@
+<template>
+    <lightning-card title="Bulk Edit Expenses" icon-name="utility:edit_form">
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <template lwc:if={hasSelectedRows}>
+            <div class="slds-box slds-m-horizontal_small slds-m-bottom_small slds-theme_shade">
+                <p class="slds-m-bottom_x-small">{selectedCount} selected — apply one field to all selected</p>
+                <div class="slds-grid slds-gutters slds-grid_vertical-align-end slds-wrap">
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-combobox
+                            label="Field"
+                            value={bulkField}
+                            options={fieldOptions}
+                            placeholder="Choose a field"
+                            onchange={handleFieldChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <template lwc:if={isTextField}>
+                            <lightning-input type="text" label="Value" value={bulkValue} onchange={handleValueChange}></lightning-input>
+                        </template>
+                        <template lwc:if={isNumberField}>
+                            <lightning-input type="number" step="0.01" label="Value" value={bulkValue} onchange={handleValueChange}></lightning-input>
+                        </template>
+                        <template lwc:if={isDateField}>
+                            <lightning-input type="date" label="Value" value={bulkValue} onchange={handleValueChange}></lightning-input>
+                        </template>
+                        <template lwc:if={isCheckboxField}>
+                            <lightning-input type="checkbox" label="Value" checked={bulkValue} onchange={handleValueChange}></lightning-input>
+                        </template>
+                        <template lwc:if={isStatusField}>
+                            <lightning-combobox label="Value" value={bulkValue} options={statusOptions} onchange={handleValueChange}></lightning-combobox>
+                        </template>
+                        <template lwc:if={isTypeField}>
+                            <lightning-combobox label="Value" value={bulkValue} options={typeOptions} onchange={handleValueChange}></lightning-combobox>
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-button
+                            label="Apply to Selected"
+                            variant="brand"
+                            disabled={applyDisabled}
+                            onclick={handleApplyBulk}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <lightning-datatable
+            key-field="Id"
+            data={expenses}
+            columns={columns}
+            draft-values={draftValues}
+            onrowselection={handleRowSelection}
+            onsave={handleSave}
+            show-row-number-column>
+        </lightning-datatable>
+    </lightning-card>
+</template>

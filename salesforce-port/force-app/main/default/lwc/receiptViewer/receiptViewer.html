@@ -1,0 +1,57 @@
+<template>
+    <lightning-card title="Receipts" icon-name="standard:document">
+        <lightning-button-icon
+            slot="actions"
+            icon-name="utility:refresh"
+            alternative-text="Refresh"
+            title="Refresh"
+            onclick={handleRefresh}>
+        </lightning-button-icon>
+
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasReceipts}>
+                <ul class="slds-has-dividers_around-space">
+                    <template for:each={receipts} for:item="receipt">
+                        <li key={receipt.Id} class="slds-item slds-p-around_x-small">
+                            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                                <div class="slds-truncate" title={receipt.File_Name__c}>
+                                    <lightning-icon icon-name="doctype:image" size="small"
+                                        class="slds-m-right_x-small"></lightning-icon>
+                                    <span>{receipt.File_Name__c}</span>
+                                </div>
+                                <div class="slds-grid slds-grid_vertical-align-center">
+                                    <lightning-badge label={receipt.Scan_Status__c}
+                                        class="slds-m-right_x-small"></lightning-badge>
+                                    <lightning-button-icon
+                                        icon-name="utility:preview"
+                                        alternative-text="Preview"
+                                        title="Preview"
+                                        class="slds-m-right_xxx-small"
+                                        data-id={receipt.Content_Document_Id__c}
+                                        onclick={handlePreview}>
+                                    </lightning-button-icon>
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        variant="border-filled"
+                                        alternative-text="Remove"
+                                        title="Remove"
+                                        data-receipt={receipt.Id}
+                                        onclick={handleDelete}>
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <template lwc:else>
+                <p class="slds-text-color_weak">No receipts attached yet.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

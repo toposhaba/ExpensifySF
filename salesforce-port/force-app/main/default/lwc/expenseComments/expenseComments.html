@@ -1,0 +1,77 @@
+<template>
+    <lightning-card title="Comments" icon-name="standard:feed">
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={canAddComment}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea
+                        label="Add a comment"
+                        value={newComment}
+                        placeholder="Write a comment..."
+                        onchange={handleCommentChange}>
+                    </lightning-textarea>
+                    <div class="slds-m-top_x-small slds-text-align_right">
+                        <lightning-button
+                            label="Post"
+                            variant="brand"
+                            icon-name="utility:send"
+                            disabled={isPostDisabled}
+                            onclick={handlePost}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:if={isEmpty}>
+                <p class="slds-text-color_weak slds-p-vertical_medium">No comments yet.</p>
+            </template>
+
+            <ul class="slds-feed__list">
+                <template for:each={comments} for:item="comment">
+                    <li key={comment.id} class="slds-feed__item slds-m-bottom_small">
+                        <article class="slds-post">
+                            <header class="slds-post__header slds-media">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="standard:user" size="small"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-grid slds-grid_align-spread">
+                                        <p>
+                                            <span class="slds-text-title_bold">{comment.authorName}</span>
+                                        </p>
+                                        <template lwc:if={comment.canDelete}>
+                                            <lightning-button-icon
+                                                icon-name="utility:delete"
+                                                variant="bare"
+                                                alternative-text="Delete comment"
+                                                title="Delete comment"
+                                                data-id={comment.id}
+                                                onclick={handleDelete}>
+                                            </lightning-button-icon>
+                                        </template>
+                                    </div>
+                                    <p class="slds-text-body_small slds-text-color_weak">
+                                        <lightning-formatted-date-time
+                                            value={comment.createdDate}
+                                            year="numeric"
+                                            month="short"
+                                            day="2-digit"
+                                            hour="2-digit"
+                                            minute="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </p>
+                                </div>
+                            </header>
+                            <div class="slds-post__content slds-text-longform slds-m-top_x-small">
+                                <lightning-formatted-text value={comment.body}></lightning-formatted-text>
+                            </div>
+                        </article>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </lightning-card>
+</template>

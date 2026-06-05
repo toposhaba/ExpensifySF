@@ -1,0 +1,52 @@
+<template>
+    <lightning-card title="Wallet" icon-name="utility:money">
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <template lwc:if={errorMessage}>
+            <div class="slds-p-around_medium slds-text-color_error">{errorMessage}</div>
+        </template>
+
+        <template lwc:if={hasWallet}>
+            <div class="slds-p-around_medium">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-3">
+                        <dl>
+                            <dt class="slds-text-title">Balance</dt>
+                            <dd class="slds-text-heading_medium">
+                                <lightning-formatted-number value={wallet.Balance__c}
+                                    format-style="currency" currency-code={currencyCode}>
+                                </lightning-formatted-number>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <dl>
+                            <dt class="slds-text-title">Currency</dt>
+                            <dd>{wallet.Currency__c}</dd>
+                        </dl>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <dl>
+                            <dt class="slds-text-title">Status</dt>
+                            <dd>{wallet.Status__c}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <h3 class="slds-text-title_caps slds-p-bottom_small">Payment History</h3>
+                <template lwc:if={hasPayments}>
+                    <lightning-datatable key-field="Id" data={payments}
+                        columns={paymentColumns} hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+                <template lwc:else>
+                    <p class="slds-text-color_weak">No payments yet.</p>
+                </template>
+            </div>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,114 @@
+<template>
+    <lightning-card title="Merchant Coding Rules" icon-name="standard:rules">
+        <div class="slds-p-around_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasPolicies}>
+                <lightning-combobox
+                    label="Workspace"
+                    value={selectedPolicyId}
+                    options={policyOptions}
+                    onchange={handlePolicyChange}
+                    class="slds-m-bottom_medium">
+                </lightning-combobox>
+
+                <div class="slds-box slds-m-bottom_medium">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-input
+                                data-form="new-rule"
+                                label="Merchant Match"
+                                value={newMerchant}
+                                onchange={handleMerchantChange}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-combobox
+                                data-form="new-rule"
+                                label="Match Type"
+                                value={newMatchType}
+                                options={matchTypeOptions}
+                                onchange={handleMatchTypeChange}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-combobox
+                                data-form="new-rule"
+                                label="Apply Category"
+                                value={newCategoryId}
+                                options={categoryChoices}
+                                onchange={handleCategoryChange}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-combobox
+                                data-form="new-rule"
+                                label="Apply Tag"
+                                value={newTagId}
+                                options={tagChoices}
+                                onchange={handleTagChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small slds-text-align_right">
+                        <lightning-button
+                            label="Add Rule"
+                            variant="brand"
+                            disabled={isAddDisabled}
+                            onclick={handleAddRule}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <template lwc:if={hasRules}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col"><div class="slds-truncate">Merchant Match</div></th>
+                                <th scope="col"><div class="slds-truncate">Match Type</div></th>
+                                <th scope="col"><div class="slds-truncate">Category</div></th>
+                                <th scope="col"><div class="slds-truncate">Tag</div></th>
+                                <th scope="col"><div class="slds-truncate">Enabled</div></th>
+                                <th scope="col"><div class="slds-truncate">Actions</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={rules} for:item="rule">
+                                <tr key={rule.id} class="slds-hint-parent">
+                                    <td><div class="slds-truncate">{rule.merchantMatch}</div></td>
+                                    <td><div class="slds-truncate">{rule.matchType}</div></td>
+                                    <td><div class="slds-truncate">{rule.categoryName}</div></td>
+                                    <td><div class="slds-truncate">{rule.tagName}</div></td>
+                                    <td>
+                                        <lightning-input
+                                            type="checkbox"
+                                            checked={rule.enabled}
+                                            data-id={rule.id}
+                                            onchange={handleToggleEnabled}>
+                                        </lightning-input>
+                                    </td>
+                                    <td>
+                                        <lightning-button-icon
+                                            icon-name="utility:delete"
+                                            alternative-text="Delete"
+                                            data-id={rule.id}
+                                            onclick={handleDeleteRule}>
+                                        </lightning-button-icon>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template lwc:else>
+                    <p class="slds-text-color_weak">No rules defined for this workspace.</p>
+                </template>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-color_weak">No workspaces found.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

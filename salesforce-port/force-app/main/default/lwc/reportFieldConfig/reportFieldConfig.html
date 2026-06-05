@@ -1,0 +1,67 @@
+<template>
+    <lightning-card title="Custom Report Fields" icon-name="standard:custom">
+        <div class="slds-p-around_medium">
+            <template lwc:if={hasPolicies}>
+                <lightning-combobox
+                    label="Workspace"
+                    value={selectedPolicyId}
+                    options={policyOptions}
+                    onchange={handlePolicyChange}
+                    class="slds-m-bottom_medium">
+                </lightning-combobox>
+
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Add Field</h3>
+                    <lightning-input
+                        label="Field Name"
+                        value={fieldName}
+                        onchange={handleNameChange}>
+                    </lightning-input>
+                    <lightning-combobox
+                        label="Field Type"
+                        value={fieldType}
+                        options={fieldTypeOptions}
+                        onchange={handleTypeChange}>
+                    </lightning-combobox>
+                    <template lwc:if={isDropdown}>
+                        <lightning-textarea
+                            label="Options (one per line)"
+                            value={options}
+                            onchange={handleOptionsChange}>
+                        </lightning-textarea>
+                    </template>
+                    <lightning-input
+                        label="Default Value"
+                        value={defaultValue}
+                        onchange={handleDefaultChange}>
+                    </lightning-input>
+                    <lightning-input
+                        type="checkbox"
+                        label="Required"
+                        checked={required}
+                        onchange={handleRequiredChange}>
+                    </lightning-input>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Add Field"
+                            variant="brand"
+                            onclick={handleCreate}
+                            disabled={isSaveDisabled}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <lightning-datatable
+                    key-field="Id"
+                    data={fieldDefs}
+                    columns={columns}
+                    onrowaction={handleRowAction}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-color_weak">No workspaces found.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Invoices" icon-name="standard:invoice">
+        <lightning-button
+            slot="actions"
+            label="New Invoice"
+            variant="brand"
+            onclick={handleNewInvoice}
+        ></lightning-button>
+
+        <div class="slds-p-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template if:true={hasInvoices}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={invoices}
+                    columns={columns}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}
+                ></lightning-datatable>
+            </template>
+
+            <template if:false={hasInvoices}>
+                <p class="slds-text-body_regular slds-text-color_weak">
+                    No invoices yet. Create your first invoice to get started.
+                </p>
+            </template>
+        </div>
+    </lightning-card>
+
+    <template if:true={showNewInvoiceModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close"
+                        onclick={handleModalClose}
+                    >
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-modal__title slds-hyphenate">New Invoice</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        type="number"
+                        label="Amount"
+                        value={amount}
+                        formatter="currency"
+                        step="0.01"
+                        onchange={handleAmountChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        type="text"
+                        label="Currency"
+                        value={currencyCode}
+                        maxlength="3"
+                        onchange={handleCurrencyChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        type="email"
+                        label="Recipient Email"
+                        value={recipientEmail}
+                        onchange={handleEmailChange}
+                        required
+                    ></lightning-input>
+                    <lightning-input
+                        type="date"
+                        label="Due Date"
+                        value={dueDate}
+                        onchange={handleDueDateChange}
+                    ></lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleModalClose}
+                    ></lightning-button>
+                    <lightning-button
+                        class="slds-m-left_x-small"
+                        label="Create"
+                        variant="brand"
+                        onclick={handleCreateInvoice}
+                    ></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

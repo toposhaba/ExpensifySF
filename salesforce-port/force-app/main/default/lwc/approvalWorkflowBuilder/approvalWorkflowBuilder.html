@@ -1,0 +1,140 @@
+<template>
+    <lightning-card title="Approval Workflow Builder" icon-name="standard:approval">
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasPolicies}>
+                <lightning-combobox
+                    label="Workspace"
+                    value={selectedPolicyId}
+                    options={policies}
+                    onchange={handlePolicyChange}
+                    class="slds-m-bottom_medium">
+                </lightning-combobox>
+            </template>
+            <template lwc:else>
+                <p class="slds-p-vertical_medium slds-text-color_weak">No workspaces found.</p>
+            </template>
+
+            <template lwc:if={selectedPolicyId}>
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">Add Approval Step</h3>
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-combobox
+                                data-form="new-step"
+                                label="Approver"
+                                value={newApproverId}
+                                options={approverOptions}
+                                onchange={handleApproverChange}
+                                placeholder="Select approver">
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input
+                                data-form="new-step"
+                                type="number"
+                                label="Approval Limit"
+                                value={newApprovalLimit}
+                                onchange={handleLimitChange}
+                                formatter="currency"
+                                step="0.01">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-combobox
+                                data-form="new-step"
+                                label="Over-Limit Forwards To"
+                                value={newOverrideId}
+                                options={approverOptions}
+                                onchange={handleOverrideChange}
+                                placeholder="Optional">
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Add Step"
+                            variant="brand"
+                            disabled={isAddDisabled}
+                            onclick={handleAddStep}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <template lwc:if={hasSteps}>
+                    <ul class="slds-has-dividers_bottom-space">
+                        <template for:each={steps} for:item="step">
+                            <li key={step.id} class="slds-item slds-p-around_small">
+                                <div class="slds-grid slds-grid_vertical-align-center slds-gutters">
+                                    <div class="slds-col slds-size_1-of-12">
+                                        <lightning-badge label={step.order}></lightning-badge>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12">
+                                        <span class="slds-text-body_regular">{step.approverName}</span>
+                                        <template lwc:if={step.isInactive}>
+                                            <span class="slds-text-color_weak slds-m-left_x-small">(inactive)</span>
+                                        </template>
+                                    </div>
+                                    <div class="slds-col slds-size_2-of-12">
+                                        <template lwc:if={step.approvalLimit}>
+                                            <lightning-formatted-number
+                                                value={step.approvalLimit}
+                                                format-style="currency">
+                                            </lightning-formatted-number>
+                                        </template>
+                                        <template lwc:else>
+                                            <span class="slds-text-color_weak">No limit</span>
+                                        </template>
+                                    </div>
+                                    <div class="slds-col slds-size_2-of-12">
+                                        <span class="slds-text-body_small">{step.overrideName}</span>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                                        <lightning-button-icon
+                                            icon-name="utility:up"
+                                            alternative-text="Move up"
+                                            data-id={step.id}
+                                            disabled={step.isFirst}
+                                            onclick={handleMoveUp}
+                                            class="slds-m-right_xx-small">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:down"
+                                            alternative-text="Move down"
+                                            data-id={step.id}
+                                            disabled={step.isLast}
+                                            onclick={handleMoveDown}
+                                            class="slds-m-right_xx-small">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:toggle"
+                                            alternative-text="Toggle active"
+                                            data-id={step.id}
+                                            onclick={handleToggleActive}
+                                            class="slds-m-right_xx-small">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:delete"
+                                            variant="border-filled"
+                                            alternative-text="Remove"
+                                            data-id={step.id}
+                                            onclick={handleRemoveStep}>
+                                        </lightning-button-icon>
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template lwc:else>
+                    <p class="slds-p-vertical_medium slds-text-color_weak">
+                        No approval steps configured. Add the first approver above.
+                    </p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

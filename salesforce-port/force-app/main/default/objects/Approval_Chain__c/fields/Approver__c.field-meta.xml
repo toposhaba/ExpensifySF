@@ -6,5 +6,5 @@
     <referenceTo>User</referenceTo>
     <relationshipLabel>Approval Chains</relationshipLabel>
     <relationshipName>Approval_Chains</relationshipName>
-    <required>true</required>
+    <required>false</required>
 </CustomField>
