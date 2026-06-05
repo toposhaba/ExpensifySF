@@ -1,0 +1,91 @@
+<template>
+    <lightning-card title="Per Diem Rate Configuration" icon-name="standard:currency">
+        <div slot="actions">
+            <lightning-button label="Import CSV" icon-name="utility:upload" onclick={handleOpenImportModal} class="slds-m-right_x-small"></lightning-button>
+            <lightning-button label="New Rate" variant="brand" icon-name="utility:add" onclick={handleOpenModal}></lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading rates"></lightning-spinner>
+            </template>
+
+            <lightning-datatable
+                key-field="id"
+                data={rates}
+                columns={columns}
+                onrowaction={handleRowAction}
+                onsave={handleSave}
+                draft-values={draftValues}
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={isModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">New Per Diem Rate</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        label="Destination"
+                        value={newRate.destination}
+                        onchange={handleDestinationChange}
+                        required>
+                    </lightning-input>
+                    <lightning-input
+                        label="Daily Rate"
+                        type="number"
+                        value={newRate.dailyRate}
+                        onchange={handleDailyRateChange}
+                        step="0.01"
+                        required>
+                    </lightning-input>
+                    <lightning-combobox
+                        label="Currency"
+                        value={newRate.currency}
+                        options={currencyOptions}
+                        onchange={handleCurrencyChange}>
+                    </lightning-combobox>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseModal} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Save" variant="brand" onclick={handleSaveRate}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template lwc:if={isImportModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseImportModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Import CSV</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p class="slds-text-body_small slds-m-bottom_small">Paste CSV with columns: Destination, Daily Rate, Currency</p>
+                    <lightning-textarea
+                        label="CSV Content"
+                        value={csvContent}
+                        onchange={handleCsvContentChange}
+                        placeholder="Destination,DailyRate,Currency&#10;New York,79,USD&#10;London,85,GBP">
+                    </lightning-textarea>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={handleCloseImportModal} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Import" variant="brand" onclick={handleImportCsv}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

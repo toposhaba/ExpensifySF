@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Category__c</fullName>
+    <label>Category</label>
+    <type>Lookup</type>
+    <referenceTo>Expense_Category__c</referenceTo>
+    <relationshipLabel>Rules</relationshipLabel>
+    <relationshipName>Rules</relationshipName>
+</CustomField>
